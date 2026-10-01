@@ -20,10 +20,10 @@ class OpenAIHandler:
     def generate(self, prompt: str, temperature: float = 0.7, max_tokens: int = 1500) -> str:
         """Gera texto usando API OpenAI"""
         try:
-            import openai
-            openai.api_key = self.api_key
+            from openai import OpenAI
+            client = OpenAI(api_key=self.api_key)
             
-            response = openai.ChatCompletion.create(
+            response = client.chat.completions.create(
                 model=self.model,
                 messages=[
                     {"role": "system", "content": "Você é um escritor profissional de livros educativos e técnicos."},
@@ -33,7 +33,7 @@ class OpenAIHandler:
                 max_tokens=max_tokens
             )
             
-            return response['choices'][0]['message']['content'].strip()
+            return response.choices[0].message.content.strip()
         
         except ImportError:
             raise ImportError("❌ Instale a biblioteca: pip install openai")
